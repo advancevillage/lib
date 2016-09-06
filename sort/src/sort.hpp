@@ -223,7 +223,7 @@ namespace tools{
 			posStack.pop();
 			begin = posStack.top();
 			posStack.pop();
-			size_t pos = Sort<T, Container>::Partition(con, begin, end, begin, sr);
+			int pos = Sort<T, Container>::Partition(con, begin, end, begin, sr);
 			if (pos > begin){
 				//[begin, pos)
 				posStack.push(begin);
@@ -303,7 +303,6 @@ namespace tools{
 		}
 		return 0;
 	}
-}
 #endif
 
 
