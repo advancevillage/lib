@@ -52,15 +52,16 @@ namespace tools{
 		}
 		int begin = 0;
 		int end = (int)con.size();
+        BubbleSort(con, begin, end, sr);
 		return 0;
 		}
 	}
 	//BubbleSort [begin, end) 
 	template<typename T, typename Container >
-	int Sort<T, Container>::BubbleSort(Container& con, int begin, int end, SortRule sr){
+	int tools::Sort<T, Container>::BubbleSort(Container& con, int begin, int end, SortRule sr){
 		int maxlen = (int)con.size();
-		EffectiveValue<T, Container>(0, begin, maxlen);
-		EffectiveValue<T, Container>(0, end, maxlen);
+		EffectiveValue(0, begin, maxlen);
+		EffectiveValue(0, end, maxlen);
 		int len = end - begin;
 		bool isEmpty = con.empty();
 		if (len <= 0 || isEmpty){
@@ -95,22 +96,22 @@ namespace tools{
 	}
 	//InsertSort
 	template<typename T, typename Container>
-	int Sort<T, Container>::InsertSort(Container& con, SortRule sr){
-		size_t len = con.size();
+	int tools::Sort<T, Container>::InsertSort(Container& con, SortRule sr){
 		bool isEmpty = con.empty();
 		if (isEmpty){
 			return -1;
 		}
 		int begin = 0;
 		int end = (int)con.size();
+        InsertSort(con, begin, end, sr);
 		return 0;
 	}
 	//InsertSort [begin, end)
 	template<typename T, typename Container >
-	int Sort<T, Container>::InsertSort(Container& con, int begin, int end, SortRule sr){
+	int tools::Sort<T, Container>::InsertSort(Container& con, int begin, int end, SortRule sr){
 		int maxlen = (int)con.size();
-		EffectiveValue<T, Container>(0, begin, maxlen);
-		EffectiveValue<T, Container>(0, end, maxlen);
+		EffectiveValue(0, begin, maxlen);
+		EffectiveValue(0, end, maxlen);
 		bool isEmpty = con.empty();
 		if (isEmpty){
 			return -1;
@@ -140,10 +141,10 @@ namespace tools{
 	}
 	//QuickSort [begin, end) Partition
 	template<typename T, typename Container >
-	 int Sort<T, Container>::Partition(Container& con, int begin, int end, int index, SortRule sr){
+	 int tools::Sort<T, Container>::Partition(Container& con, int begin, int end, int index, SortRule sr){
 		 int maxlen = (int)con.size();
-		 EffectiveValue<T, Container>(0, begin, maxlen);
-		 EffectiveValue<T, Container>(0, end, maxlen);
+		 EffectiveValue(0, begin, maxlen);
+		 EffectiveValue(0, end, maxlen);
 		bool isEmpty = con.empty();
 		if (isEmpty || index < begin || index >= end){
 			return -1;
@@ -192,7 +193,7 @@ namespace tools{
 	}
 	//QuickSort
 	template<typename T, typename Container>
-	int Sort<T, Container>::QuickSort(Container& con, SortRule sr){
+	int tools::Sort<T, Container>::QuickSort(Container& con, SortRule sr){
 		bool isEmpty = con.empty();
 		if (isEmpty){
 			return -1;
@@ -205,10 +206,10 @@ namespace tools{
 	}
 	//QuickSort [begin, end)
 	template<typename T, typename Container>
-	int Sort<T, Container>::QuickSort(Container& con, int begin, int end, SortRule sr){
+	int tools::Sort<T, Container>::QuickSort(Container& con, int begin, int end, SortRule sr){
 		int maxlen = (int)con.size();
-		EffectiveValue<T, Container>(0, begin, maxlen);
-		EffectiveValue<T, Container>(0, end, maxlen);
+		EffectiveValue(0, begin, maxlen);
+		EffectiveValue(0, end, maxlen);
 		bool isEmpty = con.empty();
 		if (isEmpty || begin >= end){
 			return -1;
@@ -238,7 +239,7 @@ namespace tools{
 	}
 	//Merge
 	template<typename T, typename Container >
-	int  Sort<T, Container>::Merge(Container& con, Container& left, const int leftSize, Container& right, const int rightSize, SortRule sr){
+	int  tools::Sort<T, Container>::Merge(Container& con, Container& left, const int leftSize, Container& right, const int rightSize, SortRule sr){
 		bool isEmpty = con.empty() || left.empty() || right.empty();
 		if (isEmpty){
 			return -1;
@@ -266,7 +267,7 @@ namespace tools{
 	}
 	//MergeSort
 	template<typename T, typename Container >
-	int Sort<T, Container>::MergeSort(Container& con, SortRule sr){
+	int tools::Sort<T, Container>::MergeSort(Container& con, SortRule sr){
 		bool isEmpty = con.empty();
 		if (isEmpty){
 			return -1;
@@ -278,7 +279,7 @@ namespace tools{
 	}
 	//MergeSort [begin, end)
 	template<typename T, typename Container >
-	int Sort<T, Container>::MergeSort(Container& con, int begin, int end, SortRule sr){
+	int tools::Sort<T, Container>::MergeSort(Container& con, int begin, int end, SortRule sr){
 		int maxsize = (int)con.size();
 		EffectiveValue(0, begin, maxsize);
 		EffectiveValue(0, end, maxsize);
