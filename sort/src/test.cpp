@@ -34,5 +34,24 @@ int main(){
     tools::Sort<int>::BubbleSort(vec, 0, 5, sr);
     for_each(vec.begin(), vec.end(), display<int>);
     cout << endl;
+    cout << "InsertSort"<<endl;
+    tools::Sort<int>::InsertSort(vec);
+    for_each(vec.begin(), vec.end(), display<int>);
+    cout << endl;
+    cout << "InsertSort range" << endl;
+    sr = DESCEND;
+    tools::Sort<int>::InsertSort(vec, 5,10, sr);
+    for_each(vec.begin(), vec.end(), display<int>);
+    cout << endl;
+    cout << "QuickSort " << endl;
+    sr =ASCEND;
+    tools::Sort<int>::QuickSort(vec, sr);
+    for_each(vec.begin(), vec.end(), display<int>);
+    cout << endl;
+    cout << "MergeSort " << endl;
+    sr = DESCEND;
+    tools::Sort<int>::MergeSort(vec, sr);
+    for_each(vec.begin(), vec.end(), display<int>);
+    cout << endl;
     return 0;
 }
