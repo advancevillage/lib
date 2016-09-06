@@ -28,7 +28,7 @@ namespace tools{
 	private:
 		static int Partition(Container& con, int begin, int end, int index, SortRule sr = ASCEND);
 		static int  Merge(Container& con, Container& left, const int leftSize, Container& right, const int rightSize, SortRule sr = ASCEND);
-		
+
 	};
 
 	//Swap
@@ -52,13 +52,12 @@ namespace tools{
 		}
 		int begin = 0;
 		int end = (int)con.size();
-        BubbleSort(con, begin, end, sr);
+		BubbleSort(con, begin, end, sr);
 		return 0;
-		}
 	}
 	//BubbleSort [begin, end) 
 	template<typename T, typename Container >
-	int tools::Sort<T, Container>::BubbleSort(Container& con, int begin, int end, SortRule sr){
+	int  Sort<T, Container>::BubbleSort(Container& con, int begin, int end, SortRule sr){
 		int maxlen = (int)con.size();
 		EffectiveValue(0, begin, maxlen);
 		EffectiveValue(0, end, maxlen);
@@ -96,19 +95,19 @@ namespace tools{
 	}
 	//InsertSort
 	template<typename T, typename Container>
-	int tools::Sort<T, Container>::InsertSort(Container& con, SortRule sr){
+	int Sort<T, Container>::InsertSort(Container& con, SortRule sr){
 		bool isEmpty = con.empty();
 		if (isEmpty){
 			return -1;
 		}
 		int begin = 0;
 		int end = (int)con.size();
-        InsertSort(con, begin, end, sr);
+		InsertSort(con, begin, end, sr);
 		return 0;
 	}
 	//InsertSort [begin, end)
 	template<typename T, typename Container >
-	int tools::Sort<T, Container>::InsertSort(Container& con, int begin, int end, SortRule sr){
+	int Sort<T, Container>::InsertSort(Container& con, int begin, int end, SortRule sr){
 		int maxlen = (int)con.size();
 		EffectiveValue(0, begin, maxlen);
 		EffectiveValue(0, end, maxlen);
@@ -141,10 +140,10 @@ namespace tools{
 	}
 	//QuickSort [begin, end) Partition
 	template<typename T, typename Container >
-	 int tools::Sort<T, Container>::Partition(Container& con, int begin, int end, int index, SortRule sr){
-		 int maxlen = (int)con.size();
-		 EffectiveValue(0, begin, maxlen);
-		 EffectiveValue(0, end, maxlen);
+	int Sort<T, Container>::Partition(Container& con, int begin, int end, int index, SortRule sr){
+		int maxlen = (int)con.size();
+		EffectiveValue(0, begin, maxlen);
+		EffectiveValue(0, end, maxlen);
 		bool isEmpty = con.empty();
 		if (isEmpty || index < begin || index >= end){
 			return -1;
@@ -193,7 +192,7 @@ namespace tools{
 	}
 	//QuickSort
 	template<typename T, typename Container>
-	int tools::Sort<T, Container>::QuickSort(Container& con, SortRule sr){
+	int Sort<T, Container>::QuickSort(Container& con, SortRule sr){
 		bool isEmpty = con.empty();
 		if (isEmpty){
 			return -1;
@@ -206,7 +205,7 @@ namespace tools{
 	}
 	//QuickSort [begin, end)
 	template<typename T, typename Container>
-	int tools::Sort<T, Container>::QuickSort(Container& con, int begin, int end, SortRule sr){
+	int Sort<T, Container>::QuickSort(Container& con, int begin, int end, SortRule sr){
 		int maxlen = (int)con.size();
 		EffectiveValue(0, begin, maxlen);
 		EffectiveValue(0, end, maxlen);
@@ -239,7 +238,7 @@ namespace tools{
 	}
 	//Merge
 	template<typename T, typename Container >
-	int  tools::Sort<T, Container>::Merge(Container& con, Container& left, const int leftSize, Container& right, const int rightSize, SortRule sr){
+	int  Sort<T, Container>::Merge(Container& con, Container& left, const int leftSize, Container& right, const int rightSize, SortRule sr){
 		bool isEmpty = con.empty() || left.empty() || right.empty();
 		if (isEmpty){
 			return -1;
@@ -267,7 +266,7 @@ namespace tools{
 	}
 	//MergeSort
 	template<typename T, typename Container >
-	int tools::Sort<T, Container>::MergeSort(Container& con, SortRule sr){
+	int Sort<T, Container>::MergeSort(Container& con, SortRule sr){
 		bool isEmpty = con.empty();
 		if (isEmpty){
 			return -1;
@@ -279,7 +278,7 @@ namespace tools{
 	}
 	//MergeSort [begin, end)
 	template<typename T, typename Container >
-	int tools::Sort<T, Container>::MergeSort(Container& con, int begin, int end, SortRule sr){
+	int Sort<T, Container>::MergeSort(Container& con, int begin, int end, SortRule sr){
 		int maxsize = (int)con.size();
 		EffectiveValue(0, begin, maxsize);
 		EffectiveValue(0, end, maxsize);
@@ -303,38 +302,6 @@ namespace tools{
 		}
 		return 0;
 	}
+}
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
