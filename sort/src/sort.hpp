@@ -223,14 +223,14 @@ namespace tools{
 			begin = posStack.top();
 			posStack.pop();
 			int pos = Sort<T, Container>::Partition(con, begin, end, begin, sr);
-			if (pos > begin){
+			if (pos >= 0 && pos > begin){
 				//[begin, pos)
 				posStack.push(begin);
 				posStack.push(pos);
 			}
-			if (pos < end){
+			if (pos >= 0 && pos < end){
 				//[pos, end)
-				posStack.push(pos);
+				posStack.push(pos+1);
 				posStack.push(end);
 			}
 		}
@@ -244,7 +244,7 @@ namespace tools{
 			return -1;
 		}
 		int i = 0, j = 0, index = 0;
-		while (i < leftSize && j < leftSize){
+		while (i < leftSize && j < rightSize){
 			switch (sr){
 			case ASCEND:
 				con[index++] = left[i] < right[j] ? left[i++] : right[j++];
@@ -271,35 +271,38 @@ namespace tools{
 		if (isEmpty){
 			return -1;
 		}
-		size_t begin = 0;
-		size_t end = con.size();
-		MergeSort(con, begin, end, sr);
+		int begin = 0;
+		int end = (int)con.size();
+		if (end <= 1 || begin >= end){
+			return 0;
+		}
+		int middle = (begin + end) / 2;
+		Container left(con.begin() + begin, con.begin() + middle);
+		Container right(con.begin() + middle, con.begin() + end);
+		MergeSort(left, sr);
+		MergeSort(right, sr);
+		int ret = Merge(con, left, (int)left.size(), right, (int)right.size(), sr);
+		if (ret == -1){
+			return -1;
+		}
 		return 0;
 	}
 	//MergeSort [begin, end)
 	template<typename T, typename Container >
 	int Sort<T, Container>::MergeSort(Container& con, int begin, int end, SortRule sr){
+		bool isEmpty = con.empty();
+		if (isEmpty){
+			return -1;
+		}
 		int maxsize = (int)con.size();
 		EffectiveValue(0, begin, maxsize);
 		EffectiveValue(0, end, maxsize);
-		bool isEmpty = con.empty();
-		if (isEmpty || begin >= end){
-			return -1;
-		}
-		if ((end - begin) < 2){
+		if (begin >= end){
 			return 0;
 		}
-		int middle = (begin + end) / 2;
-		//[begin, middle)
-		Container left(con.begin() + begin, con.begin() + middle);
-		//[middle, end)
-		Container right(con.begin() + middle, con.begin() + end);
-		MergeSort(left, begin, middle, sr);
-		MergeSort(right, middle, end, sr);
-		int ret = Merge(con, left, (int)left.size(), right, (int)right.size(), sr);
-		if (ret == -1){
-			return -1;
-		}
+		Container temp(con.begin() + begin, con.begin() + end);
+		MergeSort(temp, sr);
+		for (int i = begin; i < end; ++i) con[i] = temp[i-begin];
 		return 0;
 	}
 }
