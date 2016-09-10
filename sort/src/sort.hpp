@@ -11,6 +11,9 @@ namespace tools{
 	public:
 		static void Swap(T& fir, T& sec);
 		static void EffectiveValue(T min, T& value, T max);
+        //HeapSort [begin, end)
+        static int MaintainHeap(Container& con,int begin, int end, HeapType ht = MAXHEAP);    
+        static int CreateHeap(Container& con, int begin, int end, HeapType ht = MAXHEAP);
 	public:
 		//BubbleSort
 		static int BubbleSort(Container& con, SortRule sr = ASCEND);
@@ -24,6 +27,8 @@ namespace tools{
 		//MergeSort
 		static int MergeSort(Container& con, SortRule sr = ASCEND);
 		static int MergeSort(Container& con, int begin, int end, SortRule sr = ASCEND);
+        //HeapSort
+        static int HeapSort(Container& con, SortRule sr = ASCEND);
 
 	private:
 		static int Partition(Container& con, int begin, int end, int index, SortRule sr = ASCEND);
@@ -305,6 +310,86 @@ namespace tools{
 		for (int i = begin; i < end; ++i) con[i] = temp[i-begin];
 		return 0;
 	}
+    //HeapSort [begin, end)
+    template<typename T, typename Container >
+        int  Sort<T,Container>::MaintainHeap(Container& con, int begin, int end, HeapType ht){
+            int maxsize = (int)con.size();
+            bool isEmpty = con.empty();
+            if(isEmpty){
+                return -1;
+            }
+            EffectiveValue(0, begin, maxsize);
+            EffectiveValue(0, end, maxsize);    
+            int root = begin;
+            int left = 2*root+1;
+            while(left < end){
+                switch(ht){
+                    case MAXHEAP:
+                        if((left+1) < end && con[left] < con[left+1]) ++left;
+                        if(con[root] > con[left]){
+                           return 0;
+                        }
+                       break;
+                    case MINHEAP:
+                        if((left+1) < end && con[left] > con[left+1]) ++left;
+                        if(con[root] < con[left]){
+                            return 0;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                Sort<T,Container>::Swap(con[root], con[left]);
+                root = left;
+                left = 2*root+1;
+            }
+            return 0;
+        }
+    //HeapSort [beign, end)
+    template<typename T, typename Container >
+        int Sort<T, Container>::CreateHeap(Container& con, int begin, int end, HeapType ht){
+            int maxsize = (int)con.size();
+            bool isEmpty = con.empty();
+            if(isEmpty){
+                return -1;
+            }
+            EffectiveValue(0, begin, maxsize);
+            EffectiveValue(0, end, maxsize);
+            int len = end - begin;
+            for(int i = begin + (len/2) - 1; i >= begin; --i){
+                Sort<T,Container>::MaintainHeap(con, i, end, ht); 
+            }
+            return 0;
+        }
+    //HeapSort [begin, end)
+    template<typename T, typename Container >
+        int Sort<T,Container>::HeapSort(Container& con, SortRule sr){
+            bool isEmpty = con.empty();
+            if(isEmpty){
+                return -1;
+            }
+            int end =(int)con.size();
+            int begin = 0;
+            HeapType ht = MAXHEAP;
+            switch(sr){
+                case ASCEND:
+                    ht = MAXHEAP;
+                    break;
+                case DESCEND:
+                    ht = MINHEAP;
+                    break;
+                default:
+                    break;
+            }
+            Sort<T,Container>::CreateHeap(con, begin, end, ht);
+            while(end > 0){
+                Sort<T,Container>::Swap(con[0], con[end-1]);
+                --end;
+                Sort<T,Container>::MaintainHeap(con, begin, end, ht);
+            }
+           return 0; 
+        }
 }
+
 #endif
 

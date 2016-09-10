@@ -58,5 +58,10 @@ int main(){
 	tools::Sort<int>::MergeSort(vec, 2, 7, sr);
 	for_each(vec.begin(), vec.end(), display<int>);
 	cout << endl;
+    cout <<"HeapSort " << endl;
+    sr = ASCEND;
+    tools::Sort<int>::HeapSort(vec, sr);
+    for_each(vec.begin(), vec.end(), display<int>);
+    cout << endl;
 	return 0;
 }

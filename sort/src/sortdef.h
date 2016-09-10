@@ -6,5 +6,9 @@ enum SortRule{
     DESCEND = 1
 };
 
+enum HeapType{
+    MAXHEAP = 0,
+    MINHEAP = 1
+};
 
 #endif
