@@ -28,6 +28,13 @@ namespace tools{
 		void MaintainDepth(Node<T>* refer_node, Node<T>* change_node);
 		//Delete
 		int Delete(const T& value);
+		//Mirror
+		void Mirror(Node<T>* pnode);
+		//GetMaxDepth
+		int GetMaxDepth(Node<T>* pnode, int& max_depth);
+
+	public:
+		Node<T>* GetRoot()const;
 	};
 	template<typename T>
 	BinaryTree<T>::BinaryTree() :root(NULL), size(0){
@@ -45,7 +52,7 @@ namespace tools{
 		root->depth = 0;
 	}
 	template<typename T>
-	BinaryTree<T>::~BinaryTree(){
+	BinaryTree<T>::~BinaryTree(void){
 		if (root != NULL) delete root;
 	}
 	template<typename T>
@@ -316,6 +323,195 @@ namespace tools{
 		}
 		--this->size;
 		return 0;
+	}
+	//Mirror
+	template<typename T>
+	void BinaryTree<T>::Mirror(Node<T>* pnode){
+		if (pnode == NULL){
+			return;
+		}
+		Node<T>* temp = pnode->pleft;
+		pnode->pleft = pnode->pright;
+		pnode->pright = temp;
+		BinaryTree<T>::Mirror(pnode->pleft);
+		BinaryTree<T>::Mirror(pnode->pright);
+	}
+	//GetRoot
+	template<typename T>
+	Node<T>* BinaryTree<T>::GetRoot()const{
+		return root;
+	}
+	//GetMaxDepth
+	template<typename T>
+	int BinaryTree<T>::GetMaxDepth(Node<T>* pnode, int& max_depth){
+		if (pnode == NULL){
+			return max_depth;
+		}
+		max_depth = max_depth < pnode->depth ? pnode->depth : max_depth;
+		BinaryTree<T>::GetMaxDepth(pnode->pleft, max_depth);
+		BinaryTree<T>::GetMaxDepth(pnode->pright, max_depth);
+		return max_depth;
+	}
+
+	template<typename T>
+	class AVLTree{
+	public:
+		int size;
+		AVLNode<T>* root;
+	public:
+		AVLTree();
+		AVLTree(AVLNode<T>& avlnode);
+		AVLTree(T value);
+		AVLTree(AVLNode<T>* pavlnode);
+		~AVLTree();
+
+	public:
+		//Insert
+		int Insert(T& value);
+		int Insert(std::vector<T>& con);
+		//GetMaxDepth
+		int GetMaxDepth(AVLNode<T>* pnode, int& max_depth);
+		//AVLNodeIsBalance
+		bool AVLNodeIsBalance(AVLNode<T>* pavlnode);
+
+	};
+	template<typename T>
+	AVLTree<T>::AVLTree() :root(NULL), size(0){
+		
+	}
+	template<typename T>
+	AVLTree<T>::AVLTree(T value) : size(1){
+		root = new AVLNode<T>(value);
+	}
+	template<typename T>
+	AVLTree<T>::AVLTree(AVLNode<T>& avlnode) : size(1){
+		root = new AVLNode<T>(avlnode.value);
+	}
+	template<typename T>
+	AVLTree<T>::AVLTree(AVLNode<T>* pavlnode) : size(1){
+		root = new AVLNode<T>(pavlnode->value);
+	}
+	template<typename T>
+	AVLTree<T>::~AVLTree(){
+		if (root != NULL) delete root;
+	}
+	//Insert
+	template<typename T>
+	int AVLTree<T>::Insert(T& value){
+		if (this->size == 0){
+			root = new AVLNode<T>(value);
+			++this->size;
+			return 0;
+		}
+		AVLNode<T>* p = NULL;
+		AVLNode<T>* gp = NULL;
+		AVLNode<T>* ggp = NULL;
+		AVLNode<T>* son = root;
+		int gen = 0;
+		while (son != NULL){
+			if (value == son->value){
+				return -1;
+			}
+			else if (value < son->value){
+				if (gen == 0){
+					p = son;
+				}
+				else if (gen = 1){
+					gp = p;
+					p = son;
+				}
+				else{
+					ggp = gp;
+					gp = p;
+					p = son;
+				}
+				son = son->pleft;
+				++gen;
+			}
+			else{
+				if (gen == 0){
+					p = son;
+				}
+				else if (gen = 1){
+					gp = p;
+					p = son;
+				}
+				else{
+					ggp = gp;
+					gp = p;
+					p = son;
+				}
+				son = son->pright;
+				++gen;
+			}
+		}
+		//插入值
+		AVLNode<T>* pavlnode = new AVLNode<T>(value);
+		if (value < p->value){
+			p->pleft = pavlnode;
+			pavlnode->depth = p->depth + 1;
+			GetMaxDepth(pavlnode, pavlnode->leftTreeMaxDepth);
+			GetMaxDepth(pavlnode, pavlnode->rightTreeMaxDepth);
+			pavlnode->ComputeLeftTreeHeight();
+			pavlnode->ComputeRightTreeHeight();
+			pavlnode->ComputeAlpha();
+		}
+		if (value > p->value){
+			p->pright = pavlnode;
+			pavlnode->depth = p->depth + 1;
+			GetMaxDepth(pavlnode, pavlnode->leftTreeMaxDepth);
+			GetMaxDepth(pavlnode, pavlnode->rightTreeMaxDepth);
+			pavlnode->ComputeLeftTreeHeight();
+			pavlnode->ComputeRightTreeHeight();
+			pavlnode->ComputeAlpha();
+		}
+		++this->size;
+		//检测是否平衡
+
+
+		return 0;
+	}
+	template<typename T>
+	int AVLTree<T>::Insert(vector<T>& con){
+		bool isEmpty = con.empty();
+		if (isEmpty){
+			return -1;
+		}
+		int len = (int)con.size();
+		for (int i = 0; i < len; ++i){
+			T value = con[i];
+			AVLTree<T>::Insert(value);
+		}
+		return 0;
+	}
+	//GetMaxDepth
+	template<typename T>
+	int AVLTree<T>::GetMaxDepth(AVLNode<T>* pavlnode, int& max_depth){
+		if (pavlnode == NULL){
+			return max_depth;
+		}
+		max_depth = max_depth < pavlnode->depth ? pavlnode->depth : max_depth;
+		AVLTree<T>::GetMaxDepth(pavlnode->pleft, max_depth);
+		AVLTree<T>::GetMaxDepth(pavlnode->pright, max_depth);
+		return max_depth;
+	}
+	//AVLNodeIsBalance
+	template<typename T>
+	bool AVLTree<T>::AVLNodeIsBalance(AVLNode<T>* pavlnode){
+		if (pavlnode == NULL){
+			return true;
+		}
+		GetMaxDepth(pavlnode->pleft, pavlnode->leftTreeMaxDepth);
+		GetMaxDepth(pavlnode->pright, pavlnode->rightTreeMaxDepth);
+		pavlnode->ComputeLeftTreeHeight();
+		pavlnode->ComputeRightTreeHeight();
+		pavlnode->ComputeAlpha();
+		if (pavlnode->alpha == -1 || pavlnode->alpha == 0 || pavlnode->alpha == 1){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 }
 #endif
