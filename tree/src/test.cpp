@@ -33,9 +33,9 @@ int main(){
 	int max_depth = 0;
 	max_depth = bt.GetMaxDepth(bt.GetRoot(), max_depth);
 	cout << "max_depth = " << max_depth << endl;
-	int i = 0;
 
 	AVLTree<int> avltree;
-	avltree.Insert(vectwo);
+	avltree.Insert(vec);
+	int i = 0;
 	return 0;
 }

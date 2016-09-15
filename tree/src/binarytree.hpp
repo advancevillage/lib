@@ -369,6 +369,8 @@ namespace tools{
 		//Insert
 		int Insert(T& value);
 		int Insert(std::vector<T>& con);
+		int Insert(AVLNode<T>* pavlnode);
+		int Insert(AVLNode<T>& avlnode);
 		//GetMaxDepth
 		int GetMaxDepth(AVLNode<T>* pnode, int& max_depth);
 		//AVLNodeIsBalance
@@ -420,7 +422,7 @@ namespace tools{
 				if (gen == 0){
 					p = son;
 				}
-				else if (gen = 1){
+				else if (gen == 1){
 					gp = p;
 					p = son;
 				}
@@ -436,7 +438,7 @@ namespace tools{
 				if (gen == 0){
 					p = son;
 				}
-				else if (gen = 1){
+				else if (gen == 1){
 					gp = p;
 					p = son;
 				}
@@ -537,7 +539,7 @@ namespace tools{
 		}
 		else if (!gpBalance){
 			int gpDepth = gp->depth;
-			if (gpBalance < 0){
+			if (gp->alpha < 0){
 				if (p->alpha == -1){
 					AVLNode<T>* pavlnode = new AVLNode<T>(gp);
 					pavlnode->pleft = NULL;
@@ -647,6 +649,21 @@ namespace tools{
 		}
 		return 0;
 	}
+	template<typename T>
+	int AVLTree<T>::Insert(AVLNode<T>* pavlnode){
+		if (pavlnode == NULL){
+			return -1;
+		}
+		T value = pavlnode->value;
+		AVLTree<T>::Insert(value);
+		return 0;
+	}
+	template<typename T>
+	int AVLTree<T>::Insert(AVLNode<T>& avlnode){
+		T value = avlnode.value;
+		AVLTree<T>::Insert(value);
+		return 0;
+	}
 	//GetMaxDepth
 	template<typename T>
 	int AVLTree<T>::GetMaxDepth(AVLNode<T>* pavlnode, int& max_depth){
@@ -692,6 +709,8 @@ namespace tools{
 		if (pavlnode == NULL){
 			return;
 		}
+		pavlnode->leftTreeMaxDepth = pavlnode->depth;
+		pavlnode->rightTreeMaxDepth = pavlnode->depth;
 		GetMaxDepth(pavlnode->pleft, pavlnode->leftTreeMaxDepth);
 		GetMaxDepth(pavlnode->pright, pavlnode->rightTreeMaxDepth);
 		pavlnode->ComputeLeftTreeHeight();
