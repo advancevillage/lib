@@ -373,6 +373,10 @@ namespace tools{
 		int GetMaxDepth(AVLNode<T>* pnode, int& max_depth);
 		//AVLNodeIsBalance
 		bool AVLNodeIsBalance(AVLNode<T>* pavlnode);
+		//MaintainDepth
+		void MaintainDepth(AVLNode<T>* refer_node, AVLNode<T>* change_node);
+		//Traversal
+		void Traversal(AVLNode<T>* pavlnode);
 
 	};
 	template<typename T>
@@ -450,8 +454,8 @@ namespace tools{
 		if (value < p->value){
 			p->pleft = pavlnode;
 			pavlnode->depth = p->depth + 1;
-			GetMaxDepth(pavlnode, pavlnode->leftTreeMaxDepth);
-			GetMaxDepth(pavlnode, pavlnode->rightTreeMaxDepth);
+			pavlnode->leftTreeMaxDepth = pavlnode->depth;
+			pavlnode->rightTreeMaxDepth = pavlnode->depth;
 			pavlnode->ComputeLeftTreeHeight();
 			pavlnode->ComputeRightTreeHeight();
 			pavlnode->ComputeAlpha();
@@ -459,15 +463,174 @@ namespace tools{
 		if (value > p->value){
 			p->pright = pavlnode;
 			pavlnode->depth = p->depth + 1;
-			GetMaxDepth(pavlnode, pavlnode->leftTreeMaxDepth);
-			GetMaxDepth(pavlnode, pavlnode->rightTreeMaxDepth);
+			pavlnode->leftTreeMaxDepth = pavlnode->depth;
+			pavlnode->rightTreeMaxDepth = pavlnode->depth;
 			pavlnode->ComputeLeftTreeHeight();
 			pavlnode->ComputeRightTreeHeight();
 			pavlnode->ComputeAlpha();
 		}
 		++this->size;
 		//¼ì²âÊÇ·ñÆ½ºâ
-
+		bool ggpBalance = AVLNodeIsBalance(ggp);
+		bool gpBalance = AVLNodeIsBalance(gp);
+		bool pBalance = AVLNodeIsBalance(p);
+		if (!ggpBalance){
+			int ggpDepth = ggp->depth;
+			if (ggp->alpha < 0){//L
+				if (gp->alpha < 0){//L
+					AVLNode<T>* pavlnode = new AVLNode<T>(ggp);
+					pavlnode->pleft = gp->pright;
+					ggp->value = gp->value;
+					ggp->pleft = p;
+					ggp->pright = pavlnode;
+					ggp->depth = ggpDepth;
+					delete gp;
+					AVLTree<T>::MaintainDepth(ggp, ggp->pleft);
+					AVLTree<T>::MaintainDepth(ggp, ggp->pright);
+					AVLTree<T>::Traversal(ggp);
+				}
+				else{//R
+					gp->pright = p->pleft;
+					p->pleft = gp;
+					ggp->pleft = p;
+					AVLNode<T>* pavlnode = new AVLNode<T>(ggp);
+					pavlnode->pleft = p->pright;
+					ggp->value = p->value;
+					ggp->depth = ggpDepth;
+					ggp->pleft = gp;
+					ggp->pright = pavlnode;
+					delete p;
+					AVLTree<T>::MaintainDepth(ggp, ggp->pleft);
+					AVLTree<T>::MaintainDepth(ggp, ggp->pright);
+					AVLTree<T>::Traversal(ggp);
+				}
+			}
+			else{//R
+				if (gp->alpha > 0){//R
+					AVLNode<T>* pavlnode = new AVLNode<T>(ggp);
+					pavlnode->pright = gp->pleft;
+					ggp->value = gp->value;
+					ggp->depth = ggpDepth;
+					ggp->pleft = pavlnode;
+					ggp->pright = p;
+					delete gp;
+					AVLTree<T>::MaintainDepth(ggp, ggp->pleft);
+					AVLTree<T>::MaintainDepth(ggp, ggp->pright);
+					AVLTree<T>::Traversal(ggp);
+				}
+				else{//L
+					gp->pleft = p->pright;
+					p->pright = gp;
+					ggp->pright = p;
+					AVLNode<T>* pavlnode = new AVLNode<T>(ggp);
+					pavlnode->pright = p->pleft;
+					ggp->value = p->value;
+					ggp->depth = ggpDepth;
+					ggp->pleft = pavlnode;
+					ggp->pright = gp;
+					delete p;
+					AVLTree<T>::MaintainDepth(ggp, ggp->pleft);
+					AVLTree<T>::MaintainDepth(ggp, ggp->pright);
+					AVLTree<T>::Traversal(ggp);
+				}
+			}
+		}
+		else if (!gpBalance){
+			int gpDepth = gp->depth;
+			if (gpBalance < 0){
+				if (p->alpha == -1){
+					AVLNode<T>* pavlnode = new AVLNode<T>(gp);
+					pavlnode->pleft = NULL;
+					pavlnode->pright = NULL;
+					gp->value = p->value;
+					gp->depth = gpDepth;
+					gp->pleft = p->pleft;
+					gp->pright = pavlnode;
+					delete p;
+					AVLTree<T>::MaintainDepth(gp, gp->pleft);
+					AVLTree<T>::MaintainDepth(gp, gp->pright);
+					AVLTree<T>::Traversal(gp);
+				}
+				else if (p->alpha == 0){
+					AVLNode<T>* pavlnode = new AVLNode<T>(gp);
+					pavlnode->pleft = p->pright;
+					pavlnode->pright = NULL;
+					gp->value = p->value;
+					gp->depth = gpDepth;
+					gp->pleft = p->pleft;
+					gp->pright = pavlnode;
+					delete p;
+					AVLTree<T>::MaintainDepth(gp, gp->pleft);
+					AVLTree<T>::MaintainDepth(gp, gp->pright);
+					AVLTree<T>::Traversal(gp);
+				}
+				else{
+					AVLNode<T>* temp = p;
+					p = p->pright;
+					p->pleft = temp;
+					temp->pright = NULL;
+					gp->pleft = p;
+					AVLNode<T>* pavlnode = new AVLNode<T>(gp);
+					pavlnode->pleft = NULL;
+					pavlnode->pright = NULL;
+					gp->value = p->value;
+					gp->depth = gpDepth;
+					gp->pleft = p->pleft;
+					gp->pright = pavlnode;
+					delete p;
+					AVLTree<T>::MaintainDepth(gp, gp->pleft);
+					AVLTree<T>::MaintainDepth(gp, gp->pright);
+					AVLTree<T>::Traversal(gp);
+				}
+			}
+			else{
+				if (p->alpha == -1){
+					AVLNode<T>* temp = p;
+					p = p->pleft;
+					p->pright = temp;
+					temp->pleft = NULL;
+					gp->pright = p;
+					AVLNode<T>* pavlnode = new AVLNode<T>(gp);
+					pavlnode->pleft = NULL;
+					pavlnode->pright = NULL;
+					gp->value = p->value;
+					gp->depth = gpDepth;
+					gp->pleft = pavlnode;
+					gp->pright = p->pright;
+					delete p;
+					AVLTree<T>::MaintainDepth(gp, gp->pleft);
+					AVLTree<T>::MaintainDepth(gp, gp->pright);
+					AVLTree<T>::Traversal(gp);
+				}
+				else if (p->alpha == 0){
+					AVLNode<T>* pavlnode = new AVLNode<T>(gp);
+					pavlnode->pleft = NULL;
+					pavlnode->pright = NULL;
+					gp->value = p->value;
+					gp->depth = gpDepth;
+					p->pleft->pleft = pavlnode;
+					gp->pleft = p->pleft;
+					gp->pright = p->pright;
+					delete p;
+					AVLTree<T>::MaintainDepth(gp, gp->pleft);
+					AVLTree<T>::MaintainDepth(gp, gp->pright);
+					AVLTree<T>::Traversal(gp);
+				}
+				else{
+					AVLNode<T>* pavlnode = new AVLNode<T>(gp);
+					pavlnode->pleft = NULL;
+					pavlnode->pright = NULL;
+					gp->value = p->value;
+					gp->depth = gpDepth;
+					gp->pleft = pavlnode;
+					gp->pright = p->pright;
+					delete p;
+					AVLTree<T>::MaintainDepth(gp, gp->pleft);
+					AVLTree<T>::MaintainDepth(gp, gp->pright);
+					AVLTree<T>::Traversal(gp);
+				}
+			}
+		}
 
 		return 0;
 	}
@@ -512,6 +675,30 @@ namespace tools{
 		else{
 			return false;
 		}
+	}
+	//MaintainDepth
+	template<typename T>
+	void AVLTree<T>::MaintainDepth(AVLNode<T>* refer_node, AVLNode<T>* change_node){
+		if (refer_node == NULL || change_node == NULL){
+			return;
+		}
+		change_node->depth = refer_node->depth + 1;
+		AVLTree<T>::MaintainDepth(change_node, change_node->pleft);
+		AVLTree<T>::MaintainDepth(change_node, change_node->pright);
+	}
+	//traversal
+	template<typename T>
+	void AVLTree<T>::Traversal(AVLNode<T>* pavlnode){
+		if (pavlnode == NULL){
+			return;
+		}
+		GetMaxDepth(pavlnode->pleft, pavlnode->leftTreeMaxDepth);
+		GetMaxDepth(pavlnode->pright, pavlnode->rightTreeMaxDepth);
+		pavlnode->ComputeLeftTreeHeight();
+		pavlnode->ComputeRightTreeHeight();
+		pavlnode->ComputeAlpha();
+		AVLTree<T>::Traversal(pavlnode->pleft);
+		AVLTree<T>::Traversal(pavlnode->pright);
 	}
 }
 #endif
